@@ -66,6 +66,6 @@ def receive_artnet_packets():
     data, addr = sock.recvfrom(1024)
     packet = ArtnetPacket.unpack_raw_artnet_packet(data)
     if packet == None:
-        pass
+        return None
     else:
         return packet.data
