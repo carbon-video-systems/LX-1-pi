@@ -6,6 +6,7 @@ import time
 import math
 
 import calibration as calib
+import ArtNet as artnet
 
 def find_drive():
     # Find a connected ODrive (this will block until you connect one)
@@ -16,10 +17,21 @@ def find_drive():
     return found_drive
 
 # Finding drive
-my_drive = find_drive()
-calib.startup_sequence(my_drive)
+def main():
+    my_drive = find_drive()
+    calib.startup_sequence(my_drive)
 
-print("Bus voltage is " + str(my_drive.vbus_voltage) + "V")
+    print("Bus voltage is " + str(my_drive.vbus_voltage) + "V")
+
+    while True:
+        data = artnet.receive_artnet_packets()
+        print(data[0], data[1])
+        my_drive.axis0.controller.pos_setpoint = 256 * data[0]
+        my_drive.axis1.controller.pos_setpoint = 256 * data[1]
+
+if __name__== '__main__':
+    main()
+
 
 # Or to change a value, just assign to the property
 # my_drive.axis1.controller.pos_setpoint = 10000

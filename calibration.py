@@ -12,9 +12,15 @@ def save_calibration(save_drive):
     save_drive.save_configuration()
     save_drive.reboot()
     print("Waiting for reboot")
-    time.sleep(10.0)
-    while save_drive != AXIS_STATE_IDLE:
-        time.sleep(0.1)
+    save_drive = find_drive()
+
+def find_drive():
+    # Find a connected ODrive (this will block until you connect one)
+    print("finding an odrive...")
+    found_drive = odrive.find_any()
+    # Find an ODrive that is connected on the serial port /dev/ttyUSB0
+    #my_drive = odrive.find_any("serial:/dev/ttyUSB0")
+    return found_drive
 
 def startup_sequence(my_drive):
     # Startup delay
@@ -142,6 +148,8 @@ def startup_configuration_0(my_drive):
     my_drive.axis0.config.startup_sensorless_control = False
 
     save_calibration(my_drive)
+    while my_drive.axis0.current_state == AXIS_STATE_STARTUP_SEQUENCE:
+        time.sleep(0.1)
     my_drive.axis0.requested_state == AXIS_STATE_CLOSED_LOOP_CONTROL
 
 def startup_configuration_1(my_drive):
@@ -152,4 +160,6 @@ def startup_configuration_1(my_drive):
     my_drive.axis1.config.startup_sensorless_control = False
 
     save_calibration(my_drive)
+    while my_drive.axis1.current_state == AXIS_STATE_STARTUP_SEQUENCE:
+        time.sleep(0.1)
     my_drive.axis1.requested_state == AXIS_STATE_CLOSED_LOOP_CONTROL
