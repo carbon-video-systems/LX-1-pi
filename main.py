@@ -4,6 +4,7 @@ import time
 import math
 
 import ArtNet as artnet
+import SerialLink as serial
 
 def isNaN(num):
     return num != num
