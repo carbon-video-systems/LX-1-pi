@@ -33,8 +33,6 @@ class ArtnetPacket:
 
     def unpack_raw_artnet_packet(raw_data):
 
-     
-
         if unpack('!8s', raw_data[:8])[0] != ArtnetPacket.ARTNET_HEADER:
             print("Received a non Art-Net packet")
             return None
