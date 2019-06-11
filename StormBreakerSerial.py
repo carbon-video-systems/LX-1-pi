@@ -6,13 +6,9 @@ from struct import pack, unpack
 from enum import IntEnum
 import array as arr
 
-serBody = serial.Serial('/dev/ttyACM0', 115200, timeout=5)
+serBody = serial.Serial('/dev/ttyUSB0', baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=5)
 serHead = serBody
 #serial.Serial('/dev/ttyACM1', 921600, timeout=5)
-
-# #read from Arduino
-# input = ser.read()
-# print("Read input " + input.decode("utf-8") + " from Arduino")
 
 def flush_buffer():
     serBody.reset_input_buffer()
@@ -49,59 +45,35 @@ class StormBreaker:
 def send_stormbreaker(data, body, head):
     if head == True:
         print("Sending head frame")
-        serHead.write(pack('>BBBBBBBBBBBBB', StormBreakerType.StormBreakerHead, StormBreakerLength.head, data[0], data[3], data[5], data[35], data[38], data[39],data[27], data[28], data[30], data[31], data[32]))
-        # serHead.write(pack('>BB', StormBreakerType.StormBreakerHead, StormBreakerLength.head))
+        serHead.write(pack('>BBBBBBBBBBBBB', StormBreakerType.StormBreakerHead, StormBreakerLength.head, data[0], data[24], data[25], data[26], data[27], data[34], data[58], data[59], data[60], data[61], data[126]))
         print("Head Data: ")
+        print(data[0])
         print(data[24])
-        # serHead.write(pack('B', StormBreakerLength.head))
-        # serHead.write(pack('B', data[0]))
-        # serHead.write(pack('>B', data[3]))
-        # serHead.write(pack('>B', data[5]))
-        # serHead.write(pack('>B', data[35]))
-        # serHead.write(pack('>B', data[38]))
-        # serHead.write(pack('>B', data[39]))
-        # serHead.write(data[0])
-        # serHead.write(data[3])
-        # serHead.write(data[5])
-        # serHead.write(data[35])
-        # serHead.write(data[38:39])
-        # serHead.write(data[20:24])
-        # serHead.write(pack('>B', data[27]))
-        # serHead.write(pack('>B', data[28]))
-        # serHead.write(data[27:28])
-        # serHead.write(pack('>B', data[30]))
-        # serHead.write(pack('>B', data[31]))
-        # serHead.write(pack('>B', data[32]))
-        # serHead.write(data[30:32])
+        print(data[25])
+        print(data[26])
+        print(data[27])
+        print(data[34])
+        print(data[58])
+        print(data[59])
+        print(data[60])
+        print(data[61])
+        print(data[126])
         time.sleep(0.2)
         
     if body == True:
         print("Sending body frame")
-        # serBody.write(pack('>BBBBBBB', StormBreakerType.StormBreakerBody,StormBreakerLength.body, data[24], data[25], data[29], data[31], data[32]))
         serBody.write(pack('>BB', StormBreakerType.StormBreakerBody,StormBreakerLength.body))
-        send_data = arr.array('B', [data[24], data[25], data[29], data[31], data[32]])
-        send_data[0] = data[24]
-        send_data[1] = data[25]
-        send_data[2] = data[29]
-        send_data[3] = data[31]
-        send_data[4] = data[32]
-        serBody.write(send_data[0:4])
-        print("header")
-        # serBody.write(pack('>B', StormBreakerLength.body))
-        print("body")
-        # serBody.write(data[25:26])
-        # serBody.write(pack('>B', data[24]))
-        # serBody.write(pack('>B', data[25]))
-        # serBody.write(pack('>B', data[24]))
-        # serBody.write(pack('>B', data[25]))
-        # serBody.write(data[24:25])
-        # serBody.write(data[29])
-        # serBody.write(data[31])
-        # serBody.write(data[32])
-        # serBody.write(pack('>B', data[29]))
-        # serBody.write(pack('>B', data[31]))
-        # serBody.write(pack('>B', data[32]))
-        time.sleep(0.5)
+        serBody.write(pack('>B', data[24]))
+        serBody.write(pack('>B', data[25]))
+        serBody.write(pack('>B', data[26]))
+        serBody.write(pack('>B', data[27]))
+        serBody.write(pack('>B', data[34]))
+        print(data[24])
+        print(data[25])
+        print(data[26])
+        print(data[27])
+        print(data[34])
+        time.sleep(0.3)
         
 
 def receive_stormbreaker(body, head):
