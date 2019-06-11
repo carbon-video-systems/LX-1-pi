@@ -1,13 +1,32 @@
 #!/usr/bin/python3
 
+import sys
 import serial
 import time
 from struct import pack, unpack
 from enum import IntEnum
 import array as arr
 
-serBody = serial.Serial('/dev/ttyUSB0', baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=5)
-serHead = serBody
+try:
+    print("serBody initialization")
+    serBody = serial.Serial('/dev/ttyUSB0', baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=5)
+except:
+    try:
+        serBody = serial.Serial('/dev/ttyUSB1', baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=5)
+        print("serial exception, trying USB1")
+    except:
+        print("DOUBLE serial exception")
+        print("SerBody not initialized")
+        print("YOOOOOOOOO")
+
+try:
+    serHead = serBody
+except:
+    print("no serBody to put into serHead")
+    while True:
+        print("SYS ERROR")
+        time.sleep(2)
+
 #serial.Serial('/dev/ttyACM1', 921600, timeout=5)
 
 def flush_buffer():
