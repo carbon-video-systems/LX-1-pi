@@ -8,16 +8,22 @@ import ArtNet as artnet
 import StormBreakerSerial as stormbreaker
 
 class SystemConnection:
-    Head = True
-    Body = False
+    head = True
+    body = True
 
 def isNaN(num):
     return num != num
 
 # Finding drive
 def main():
-
+    
+    time.sleep(0.2)
     old_data = artnet.receive_artnet_packets()
+    
+    stormbreaker.receive_serials()
+    time.sleep(0.2)
+    stormbreaker.flush_buffer()
+    time.sleep(0.2)
 
     while True:
         data = artnet.receive_artnet_packets()
@@ -26,12 +32,13 @@ def main():
             data = old_data
         else:
             old_data = data
-            print(data[24], data[72])
-            stormbreaker.send_stormbreaker(data, SystemConnection.Body, SystemConnection.Head)
+            print(data[24], data[25])
+            stormbreaker.send_stormbreaker(data, SystemConnection.body, SystemConnection.head)
             # send new data to arduino
 
-        stormbreaker.receive_stormbreaker(SystemConnection.Body, SystemConnection.Head)
+        stormbreaker.receive_stormbreaker(SystemConnection.body, SystemConnection.head)
         # Check for serial available
+        time.sleep(0.1)
         
 
 if __name__== '__main__':
