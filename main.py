@@ -2,24 +2,24 @@ from __future__ import print_function
 
 import time
 import math
-from enum import Enum
+from enum import Enum, IntEnum
 
 import ArtNet as artnet
-import StormBreakerSerial as stormbreaker
+import StormBreakerSerial as storm
 
 # Selects if the head and/or the body are connected
 class SystemConnection:
-    head = True
+    head = False
     body = True
 
-def isNaN(num):
-    return num != num
+class TeensyConnection(IntEnum):
+    numTeensy = 1
 
 # main function
 def main():
     
     # initializes receive array and flushes serial ports
-    time.sleep(0.2)
+    time.sleep(0.5)
 
     old_data = artnet.receive_artnet_packets()
 
@@ -27,11 +27,15 @@ def main():
         while old_data == None:
             old_data = artnet.receive_artnet_packets()
     
-    stormbreaker.receive_serials()
-    time.sleep(0.25)
-    stormbreaker.flush_buffer()
-    time.sleep(0.25)
+    storm.receive_serials()
+    time.sleep(0.5)
+    storm.flush_buffer()
+    time.sleep(0.5)
 
+    # identify the Teensys that are connected
+    if SystemConnection.head == True and SystemConnection.body == True:
+        storm.StormBreaker.identify()
+    
     # main program loop
     while True:
         # Receive new artnet data
@@ -44,12 +48,16 @@ def main():
             old_data = data
             print(data[24], data[25])
             # function sends data to the stormbreaker structure
-            stormbreaker.send_stormbreaker(data, SystemConnection.body, SystemConnection.head)
+            storm.StormBreaker.send(data, SystemConnection.body, SystemConnection.head)
 
         # Checks for incoming serial messages from Teensy
-        stormbreaker.receive_stormbreaker(SystemConnection.body, SystemConnection.head)
+        storm.StormBreaker.receive(SystemConnection.body, SystemConnection.head)
         time.sleep(0.1)
         
 
 if __name__== '__main__':
     main()
+
+
+# def isNaN(num):
+#     return num != num
