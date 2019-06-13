@@ -1,14 +1,11 @@
 
 import sys
-from socket import (socket, AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_REUSEADDR,
-                    SO_BROADCAST)
+from socket import (socket, AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_REUSEADDR)
 from struct import pack, unpack
 
 # Sets IP address and UDP_PORT for the incoming data
 UDP_IP = ""
 UDP_PORT = 6454
-
-BROADCAST_PORT = 7788
 
 # Defines the ArtNet Packet class
 class ArtnetPacket:
