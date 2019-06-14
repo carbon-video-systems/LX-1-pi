@@ -7,7 +7,10 @@ from enum import IntEnum
 import array as arr
 import main as top
 
+
 # initializes USB serial ports for communication with the Teensy
+# serBody = serial.Serial('/dev/ttyUSB0', baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=5)
+
 if top.TeensyConnection.numTeensy == 1:
     try:
         print("serBody initialization")
@@ -48,7 +51,7 @@ class StormBreaker:
     # def __init__(self):
     #     self.message_type = None
     #     self.length = None
-    #     # self.data = None
+    #     self.data = None
         
     # def __str__(self):
     #     return ("StormBreaker package:\n - message_type: {0}\n - length: {1}\n - "
@@ -71,15 +74,35 @@ class StormBreaker:
         body = 0xAF
         head = 0x50
 
+    # def unpack_storm()
+    class Headers():
+        def body():
+            return pack('>BB', StormBreaker.MsgType.StormBody, StormBreaker.MsgLength.body)
+        
+        def head():
+            return pack('>BB', StormBreaker.MsgType.StormBody, StormBreaker.MsgLength.body)
+        
+        def ident():
+            return pack('>BB', StormBreaker.MsgType.StormIdent, StormBreaker.MsgLength.ident)
+
+        def pack_header(message_type):
+            header = {
+                StormBreaker.MsgType.StormBody: StormBreaker.Headers.body,
+                StormBreaker.MsgType.StormHead: StormBreaker.Headers.head,
+                StormBreaker.MsgType.StormIdent: StormBreaker.Headers.ident
+            }
+            retrieve_header = header.get(message_type, lambda: "INVALID MESSAGE")
+            return retrieve_header()
+    
     def identify():
         # Send ident to body
-        serBody.write(pack('>BB', StormBreaker.MsgType.StormIdent, StormBreaker.MsgLength.ident))
+        ident_message = StormBreaker.Headers.pack_header(StormBreaker.MsgType.StormIdent)
+        serBody.write(ident_message)
         time.sleep(0.1)
         check1 = receive_ident(True)
-        # Receive from body
 
         # Send ident to head
-        serHead.write(pack('>BB', StormBreaker.MsgType.StormIdent, StormBreaker.MsgLength.ident))
+        serHead.write(ident_message)
         time.sleep(0.1)
         check2 = receive_ident(False)
         
@@ -99,7 +122,18 @@ class StormBreaker:
     def send(data, body, head):
         if head == True:
             print("Sending head frame")
-            serHead.write(pack('>BBBBBBBBBBBBB', StormBreaker.MsgType.StormHead, StormBreaker.MsgLength.head, data[24], data[24], data[25], data[26], data[27], data[34], data[58], data[59], data[60], data[61], data[126]))
+            serHead.write(StormBreaker.Headers.pack_header(StormBreaker.MsgType.StormHead))
+            serHead.write(pack('>B', data[24]))
+            serHead.write(pack('>B', data[24]))
+            serHead.write(pack('>B', data[25]))
+            serHead.write(pack('>B', data[26]))
+            serHead.write(pack('>B', data[27]))
+            serHead.write(pack('>B', data[34]))
+            serHead.write(pack('>B', data[58]))
+            serHead.write(pack('>B', data[59]))
+            serHead.write(pack('>B', data[60]))
+            serHead.write(pack('>B', data[61]))
+            serHead.write(pack('>B', data[126]))
             print("Head Data: ")
             print(data[24])
             print(data[24])
@@ -116,10 +150,10 @@ class StormBreaker:
             
         if body == True:
             print("Sending body frame")
-            serBody.write(pack('>BB', StormBreaker.MsgType.StormBody,StormBreaker.MsgLength.body))
+            serBody.write(StormBreaker.Headers.pack_header(StormBreaker.MsgType.StormBody))
             serBody.write(pack('>B', 0))
             serBody.write(pack('>B', 0))
-            serBody.write(pack('>B', 255))
+            serBody.write(pack('>B', 230))
             serBody.write(pack('>B', data[10]))
             serBody.write(pack('>B', data[9]))
             print("0")

@@ -4,8 +4,8 @@ import time
 import math
 from enum import Enum, IntEnum
 
-import ArtNet as artnet
 import StormBreakerSerial as storm
+import ArtNet as artnet
 
 # Selects if the head and/or the body are connected
 class SystemConnection:
@@ -34,6 +34,7 @@ def main():
 
     # identify the Teensys that are connected
     if SystemConnection.head == True and SystemConnection.body == True:
+        time.sleep(5)
         storm.StormBreaker.identify()
     
     # main program loop
