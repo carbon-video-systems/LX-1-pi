@@ -122,45 +122,64 @@ class StormBreaker:
     def send(data, body, head):
         if head == True:
             print("Sending head frame")
+
+            # change these variables to change packet data
+            strobe_shutter = 0
+            iris = 0
+            zoom = 0
+            focus = 0
+            tilt = 0
+            tilt_control = 0
+            pan_tilt_speed = 0
+            power_special_functions = 0
+
             serHead.write(StormBreaker.Headers.pack_header(StormBreaker.MsgType.StormHead))
-            serHead.write(pack('>B', data[24]))
-            serHead.write(pack('>B', data[24]))
-            serHead.write(pack('>B', data[25]))
-            serHead.write(pack('>B', data[26]))
-            serHead.write(pack('>B', data[27]))
-            serHead.write(pack('>B', data[34]))
-            serHead.write(pack('>B', data[58]))
-            serHead.write(pack('>B', data[59]))
-            serHead.write(pack('>B', data[60]))
-            serHead.write(pack('>B', data[61]))
-            serHead.write(pack('>B', data[126]))
+            serHead.write(pack('>B', strobe_shutter))
+            serHead.write(pack('>B', iris))
+            serHead.write(pack('>B', zoom >> 8))
+            serHead.write(pack('>B', zoom & 0xFF))
+            serHead.write(pack('>B', focus >> 8))
+            serHead.write(pack('>B', focus & 0xFF))
+            serHead.write(pack('>B', tilt >> 8))
+            serHead.write(pack('>B', tilt & 0xFF))
+            serHead.write(pack('>B', tilt_control))
+            serHead.write(pack('>B', pan_tilt_speed))
+            serHead.write(pack('>B', power_special_functions))
+            
             print("Head Data: ")
-            print(data[24])
-            print(data[24])
-            print(data[25])
-            print(data[26])
-            print(data[27])
-            print(data[34])
-            print(data[58])
-            print(data[59])
-            print(data[60])
-            print(data[61])
-            print(data[126])
-            time.sleep(0.2)
+            print(strobe_shutter)
+            print(iris)
+            print(zoom)
+            print(focus)
+            print(tilt)
+            print(tilt_control)
+            print(pan_tilt_speed)
+            print(power_special_functions)
+
+            time.sleep(0.25)
             
         if body == True:
             print("Sending body frame")
+
+            # change these variables to change packet data
+            pan = 0
+            pan_control = 0
+            pan_tilt_speed = 0
+            power_special_functions = 0
+
             serBody.write(StormBreaker.Headers.pack_header(StormBreaker.MsgType.StormBody))
-            serBody.write(pack('>B', 0))
-            serBody.write(pack('>B', 0))
-            serBody.write(pack('>B', 230))
-            serBody.write(pack('>B', data[10]))
-            serBody.write(pack('>B', data[9]))
-            print("0")
-            print("0")
-            print("127")
-            print(data[10])
-            print(data[9])
+            serBody.write(pack('>B', pan >> 8))
+            serBody.write(pack('>B', pan & 0xFF))
+            serBody.write(pack('>B', pan_control))
+            serBody.write(pack('>B', pan_tilt_speed))
+            serBody.write(pack('>B', power_special_functions))
+
+            print("Body Data: ")
+            print(pan)
+            print(pan_control)
+            print(pan_tilt_speed)
+            print(power_special_functions)
+
             time.sleep(0.25)
             
 
