@@ -73,6 +73,7 @@ class StormBreaker:
     class Ident(IntEnum):
         body = 0xAF
         head = 0x50
+        both_for_testing = 0xB7
 
     # def unpack_storm()
     class Headers():
@@ -80,7 +81,7 @@ class StormBreaker:
             return pack('>BB', StormBreaker.MsgType.StormBody, StormBreaker.MsgLength.body)
         
         def head():
-            return pack('>BB', StormBreaker.MsgType.StormBody, StormBreaker.MsgLength.body)
+            return pack('>BB', StormBreaker.MsgType.StormHead, StormBreaker.MsgLength.head)
         
         def ident():
             return pack('>BB', StormBreaker.MsgType.StormIdent, StormBreaker.MsgLength.ident)
@@ -128,8 +129,8 @@ class StormBreaker:
             iris = 0
             zoom = 0
             focus = 0
-            tilt = 0
-            tilt_control = 0
+            tilt = (data[24] << 8) | data[25]
+            tilt_control = 1
             pan_tilt_speed = 0
             power_special_functions = 0
 
@@ -162,10 +163,10 @@ class StormBreaker:
             print("Sending body frame")
 
             # change these variables to change packet data
-            pan = 0
-            pan_control = 0
-            pan_tilt_speed = 0
-            power_special_functions = 0
+            pan = (data[24] << 8) | data[25]    # 0 - 65535
+            pan_control = 1                     # 0 - 255
+            pan_tilt_speed = 250                  # 0 - 255
+            power_special_functions = 0         # 0 - 255
 
             serBody.write(StormBreaker.Headers.pack_header(StormBreaker.MsgType.StormBody))
             serBody.write(pack('>B', pan >> 8))

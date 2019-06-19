@@ -9,7 +9,7 @@ import ArtNet as artnet
 
 # Selects if the head and/or the body are connected
 class SystemConnection:
-    head = False
+    head = True
     body = True
 
 class TeensyConnection(IntEnum):
@@ -35,7 +35,7 @@ def main():
     # identify the Teensys that are connected
     if SystemConnection.head == True and SystemConnection.body == True:
         time.sleep(5)
-        storm.StormBreaker.identify()
+        #storm.StormBreaker.identify()  #this currently throws an error when commented in
     
     # main program loop
     while True:
