@@ -134,6 +134,16 @@ class StormBreaker:
             pan_tilt_speed = 0
             power_special_functions = 0
 
+            # according to LX1 DMX spec:
+            # strobe_shutter = data[0]
+            # iris = data[20]
+            # zoom = (data[21] << 8) | data[22]
+            # focus = (data[23] << 8) | data[24]
+            # tilt = (data[27] << 8) | data[28]
+            # tilt_control = data[30]
+            # pan_tilt_speed = data[31]
+            # power_special_functions = data[32]
+
             serHead.write(StormBreaker.Headers.pack_header(StormBreaker.MsgType.StormHead))
             serHead.write(pack('>B', strobe_shutter))
             serHead.write(pack('>B', iris))
@@ -167,6 +177,12 @@ class StormBreaker:
             pan_control = 1                     # 0 - 255
             pan_tilt_speed = 250                  # 0 - 255
             power_special_functions = 0         # 0 - 255
+
+            # according to LX1 DMX spec:
+            # pan = (data[25] << 8) | data[26]
+            # pan_control = data[29]
+            # pan_tilt_speed = data[31]
+            # power_special_functions = data[32]
 
             serBody.write(StormBreaker.Headers.pack_header(StormBreaker.MsgType.StormBody))
             serBody.write(pack('>B', pan >> 8))
