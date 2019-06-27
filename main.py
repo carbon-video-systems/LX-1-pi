@@ -1,3 +1,20 @@
+"""LX-1 Main
+
+This script controls the flow of receiving ArtNet packets and the application
+of the StormBreaker communication protocol.
+
+This script requires at least one active Serial port connected to a USB port.
+This script requires a connected Artnet broadcast to the ethernet socket.
+
+This file could be imported as a module and contains the following classes:
+
+    * SystemConnection
+    * TeensyConnection
+
+and the following functions outside of classes:
+
+    * main
+"""
 from __future__ import print_function
 
 import time

@@ -1,4 +1,17 @@
+"""ArtNet Receiver
 
+This script unpacks and parses ArtNet data received from the ethernet socket.
+
+This script requires a connected Artnet broadcast to the ethernet socket.
+
+This file should be imported as a module and contains the following classes:
+
+    * ArtnetPacket
+
+and the following functions outside of classes:
+
+    * receive_artnet_packets
+"""
 import sys
 from socket import (socket, AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_REUSEADDR)
 from struct import pack, unpack

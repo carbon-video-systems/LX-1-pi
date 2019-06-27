@@ -1,4 +1,20 @@
+"""StormBreaker Serial Communications Protocol and Framework
 
+This script packages received and parsed ArtNet data into data packages that
+are ready to be sent to connected microcontrollers.
+
+This script requires at least one active Serial port connected to a USB port.
+
+This file should be imported as a module and contains the following classes:
+
+    * StormBreaker
+
+and the following functions outside of classes:
+
+    * receive_ident
+    * receive_serials
+    * flush_buffer
+"""
 import sys
 import serial
 import time
@@ -91,6 +107,18 @@ class StormBreaker:
             return pack('>BB', StormBreaker.MsgType.StormIdent, StormBreaker.MsgLength.ident)
 
         def pack_header(message_type):
+            """Packages two bytes in the format of a StormBreaker Header
+
+            Parameters
+            ----------
+            message_type : int
+                Create a StormBreaker header of this msg type
+
+            Returns
+            -------
+            bytes object
+                2 byte packaged header, ready to send
+            """
             header = {
                 StormBreaker.MsgType.StormBody: StormBreaker.Headers.body,
                 StormBreaker.MsgType.StormHead: StormBreaker.Headers.head,
