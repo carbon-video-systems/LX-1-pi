@@ -47,7 +47,7 @@ else:
 
 
 class StormBreaker:
-    
+    """StormBreaker Protocol"""
     # def __init__(self):
     #     self.message_type = None
     #     self.length = None
@@ -58,6 +58,7 @@ class StormBreaker:
     #             "data: {2}").format(self.message_type, self.length, self.data)
 
     class MsgType(IntEnum):
+        """Header enumeration for different messages"""
         StormError = -2
         StormWarning = -1
         StormOK = 0
@@ -66,17 +67,20 @@ class StormBreaker:
         StormIdent = 99
 
     class MsgLength(IntEnum):
+        """Length of the StormBreaker payload"""
         ident = 0
         body = 5
         head = 11
 
     class Ident(IntEnum):
+        """System identification message"""
         body = 0xAF
         head = 0x50
         both_for_testing = 0xB7
 
     # def unpack_storm()
     class Headers():
+        """Packs the StormBreaker header with relevent information"""
         def body():
             return pack('>BB', StormBreaker.MsgType.StormBody, StormBreaker.MsgLength.body)
         
@@ -121,6 +125,7 @@ class StormBreaker:
             print("Identity check failed")
 
     def send(data, body, head):
+        """Sends the StormBreaker package to destination microcontrollers"""
         if head == True:
             print("Sending head frame")
 
@@ -201,6 +206,7 @@ class StormBreaker:
             
 
     def receive(body, head):
+        """Receives StormBreaker messages from connected microcontrollers"""
         if head == True:
             while serHead.in_waiting > 0:
                 while serHead.in_waiting > 0:

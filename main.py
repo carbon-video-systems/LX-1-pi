@@ -9,15 +9,17 @@ import ArtNet as artnet
 
 # Selects if the head and/or the body are connected
 class SystemConnection:
+    """Declares which modules are connected"""
     head = True
     body = True
 
 class TeensyConnection(IntEnum):
+    """Number of teensy microcontrollers connected to the system"""
     numTeensy = 1
 
 # main function
 def main():
-    
+    """Main function"""
     # initializes receive array and flushes serial ports
     time.sleep(0.5)
 
@@ -57,6 +59,7 @@ def main():
         
 
 if __name__== '__main__':
+    """Sets main as the top level function"""
     main()
 
 

@@ -9,10 +9,11 @@ UDP_PORT = 6454
 
 # Defines the ArtNet Packet class
 class ArtnetPacket:
-
+    """ArtNet Packet Class"""
     ARTNET_HEADER = b'Art-Net\x00'
 
     def __init__(self):
+        """ArtNet Structure"""
         self.op_code = None
         self.ver = None
         self.sequence = None
@@ -22,6 +23,7 @@ class ArtnetPacket:
         self.data = None
 
     def __str__(self):
+        """ArtNet packet sequence"""
         return ("ArtNet package:\n - op_code: {0}\n - version: {1}\n - "
                 "sequence: {2}\n - physical: {3}\n - universe: {4}\n - "
                 "length: {5}\n - data : {6}").format(
@@ -30,6 +32,7 @@ class ArtnetPacket:
 
     # unpacks raw artnet data
     def unpack_raw_artnet_packet(raw_data):
+        """Unpacks received ArtNet packets"""
 
         if unpack('!8s', raw_data[:8])[0] != ArtnetPacket.ARTNET_HEADER:
             print("Received a non Art-Net packet")
@@ -56,6 +59,7 @@ class ArtnetPacket:
 
 # main artnet receive function
 def receive_artnet_packets():
+    """Looks for and receieves ArtNet packets from the ethernet socket"""
     sock = socket(AF_INET, SOCK_DGRAM)  # UDP
     sock.bind((UDP_IP, UDP_PORT))
 
