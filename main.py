@@ -53,7 +53,7 @@ def main():
 
     # identify the Teensys that are connected
     if SystemConnection.head == True and SystemConnection.body == True and TeensyConnection.numTeensy == 2:
-        time.sleep(5)
+        time.sleep(2.5)
         # TODO CHECK THIS ERROR??
         # storm.StormBreaker.identify()  #this currently throws an error when commented in
     

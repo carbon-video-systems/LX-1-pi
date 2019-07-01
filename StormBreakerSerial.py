@@ -200,7 +200,7 @@ class StormBreaker:
             print(pan_tilt_speed)
             print(power_special_functions)
 
-            time.sleep(0.25)
+            time.sleep(0.1)
             
         if body == True:
             print("Sending body frame")
@@ -230,7 +230,7 @@ class StormBreaker:
             print(pan_tilt_speed)
             print(power_special_functions)
 
-            time.sleep(0.25)
+            time.sleep(0.1)
             
 
     def receive(body, head):
