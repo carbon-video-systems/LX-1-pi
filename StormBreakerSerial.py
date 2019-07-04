@@ -29,37 +29,46 @@ import main as top
 
 if top.TeensyConnection.numTeensy == 1:
     try:
-        print("serBody initialization")
+        if top.options.testing == True:
+            print("serBody initialization")
         serBody = serial.Serial('/dev/ttyUSB0', baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=5)
     except:
         try:
             serBody = serial.Serial('/dev/ttyUSB1', baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=5)
             print("serial exception, trying USB1")
         except:
-            print("DOUBLE serial exception")
+            if top.options.testing == True:
+                print("DOUBLE serial exception")
 
     try:
         serHead = serBody
     except:
-        print("both serial ports disconnected")
+        if top.options.testing == True:
+            print("both serial ports disconnected")
         while True:
-            print("SYS ERROR")
+            if top.options.testing == True:
+                print("SYS ERROR")
             time.sleep(2)
 
 elif top.TeensyConnection.numTeensy == 2:
     try:
-        print("serBody initialization")
+        if top.options.testing == True:
+            print("serBody initialization")
         serBody = serial.Serial('/dev/ttyUSB0', baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=5)
     except:
-        print("ONE TEENSY NOT CONNECTED - check numTeensys")
+        if top.options.testing == True:
+            print("ONE TEENSY NOT CONNECTED - check numTeensys")
     try:
-        print("serHead initialization")
+        if top.options.testing == True:
+            print("serHead initialization")
         serHead = serial.Serial('/dev/ttyUSB1', baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=5)
     except:
-        print("SECOND TEENSY NOT CONNECTED - check numTeensys")
+        if top.options.testing == True:
+            print("SECOND TEENSY NOT CONNECTED - check numTeensys")
 
 else:
-    print("NO TEENSYS CONNECTED - CHECK NUMTEENSYS")
+    if top.options.testing == True:
+        print("NO TEENSYS CONNECTED - CHECK NUMTEENSYS")
 
 class StormBreaker:
     """StormBreaker Protocol"""
@@ -67,7 +76,7 @@ class StormBreaker:
     #     self.message_type = None
     #     self.length = None
     #     self.data = None
-        
+
     # def __str__(self):
     #     return ("StormBreaker package:\n - message_type: {0}\n - length: {1}\n - "
     #             "data: {2}").format(self.message_type, self.length, self.data)
@@ -98,10 +107,10 @@ class StormBreaker:
         """Packs the StormBreaker header with relevent information"""
         def body():
             return pack('>BB', StormBreaker.MsgType.StormBody, StormBreaker.MsgLength.body)
-        
+
         def head():
             return pack('>BB', StormBreaker.MsgType.StormHead, StormBreaker.MsgLength.head)
-        
+
         def ident():
             return pack('>BB', StormBreaker.MsgType.StormIdent, StormBreaker.MsgLength.ident)
 
@@ -125,7 +134,7 @@ class StormBreaker:
             }
             retrieve_header = header.get(message_type, lambda: "INVALID MESSAGE")
             return retrieve_header()
-    
+
     def identify():
         # Send ident to body
         ident_message = StormBreaker.Headers.pack_header(StormBreaker.MsgType.StormIdent)
@@ -137,7 +146,7 @@ class StormBreaker:
         serHead.write(ident_message)
         time.sleep(0.1)
         check2 = receive_ident(False)
-        
+
         if top.options.testing == True:
             print("check1 = ")
             print(check1)
@@ -148,7 +157,7 @@ class StormBreaker:
             serBuff = serBody
             serBody = serHead
             serHead = serBuff
-        
+
         if check1 == None or check2 == None:
             if top.options.testing == True:
                 print("Identity check failed")
@@ -156,7 +165,7 @@ class StormBreaker:
     def send(data, body, head):
         """Sends the StormBreaker package to destination microcontrollers"""
         if head == True:
-            if top.options.testing == True:
+            if top.options.debugging == True:
                 print("Sending head frame")
 
             # change these variables to change packet data
@@ -191,8 +200,8 @@ class StormBreaker:
             serHead.write(pack('>B', tilt_control))
             serHead.write(pack('>B', pan_tilt_speed))
             serHead.write(pack('>B', power_special_functions))
-            
-            if top.options.testing == True:
+
+            if top.options.debugging == True:
                 print("Head Data: ")
                 print(strobe_shutter)
                 print(iris)
@@ -202,9 +211,9 @@ class StormBreaker:
                 print(tilt_control)
                 print(pan_tilt_speed)
                 print(power_special_functions)
-            
+
         if body == True:
-            if top.options.testing == True:
+            if top.options.debugging == True:
                 print("Sending body frame")
 
             # change these variables to change packet data
@@ -226,13 +235,13 @@ class StormBreaker:
             serBody.write(pack('>B', pan_tilt_speed))
             serBody.write(pack('>B', power_special_functions))
 
-            if top.options.testing == True:
+            if top.options.debugging == True:
                 print("Body Data: ")
                 print(pan)
                 print(pan_control)
                 print(pan_tilt_speed)
                 print(power_special_functions)
-            
+
 
     def receive(body, head):
         """Receives StormBreaker messages from connected microcontrollers"""
@@ -240,15 +249,17 @@ class StormBreaker:
             while serHead.in_waiting > 0:
                 while serHead.in_waiting > 0:
                     line = serHead.readline()
-                    print(line)
+                    if top.options.testing == True:
+                        print(line)
                     # print(line.decode("utf-8"))
                 time.sleep(0.05)
-        
+
         if body == True:
             while serBody.in_waiting > 0:
                 while serBody.in_waiting > 0:
                     line = serBody.readline()
-                    print(line)
+                    if top.options.testing == True:
+                        print(line)
                     # print(line.decode("utf-8"))
                 time.sleep(0.05)
 
@@ -257,19 +268,21 @@ def receive_ident(body):
         while serBody.in_waiting == 0:
             time.sleep(0.1)
         check = int(serBody.readline().strip())
-        print(check)
+        if top.options.testing == True:
+            print(check)
         if check == StormBreaker.Ident.body:
             return True
         elif check == StormBreaker.Ident.head:
             return False
         else:
             return None
-    
+
     else:
         while serHead.in_waiting == 0:
             time.sleep(0.1)
         check = int(serBody.readline().strip())
-        print(check)
+        if top.options.testing == True:
+            print(check)
         if check == StormBreaker.Ident.head:
             return True
         elif check == StormBreaker.Ident.body:
@@ -281,13 +294,15 @@ def receive_serials():
     while serBody.in_waiting > 0:
         while serBody.in_waiting > 0:
             line = serBody.readline()
-            print(line)
+            if top.options.testing == True:
+                print(line)
         time.sleep(0.1)
 
     while serHead.in_waiting > 0:
         while serHead.in_waiting > 0:
             line = serHead.readline()
-            print(line)
+            if top.options.testing == True:
+                print(line)
         time.sleep(0.1)
 
 def flush_buffer():

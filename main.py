@@ -27,7 +27,8 @@ import ArtNet as artnet
 # Selects if debugging print statements are output
 class options:
     """Sets debugging print statements"""
-    testing = False
+    testing = True
+    debugging = False
 
 # Selects if the head and/or the body are connected
 class SystemConnection:
@@ -50,7 +51,7 @@ def main():
     if old_data == None:
         while old_data == None:
             old_data = artnet.receive_artnet_packets()
-    
+
     storm.receive_serials()
     time.sleep(0.5)
     storm.flush_buffer()
@@ -61,12 +62,12 @@ def main():
         time.sleep(5)
         # TODO CHECK THIS ERROR??
         # storm.StormBreaker.identify()  #this currently throws an error when commented in
-    
+
     # main program loop
     while True:
         # Receive new artnet data
         data = artnet.receive_artnet_packets()
-        
+
         # Updates StormBreaker protocol with new data
         if data == None:
             data = old_data
@@ -78,7 +79,7 @@ def main():
         # Checks for incoming serial messages from Teensy
         storm.StormBreaker.receive(SystemConnection.body, SystemConnection.head)
         # time.sleep(0.05)
-        
+
 
 if __name__== '__main__':
     """Sets main as the top level function"""

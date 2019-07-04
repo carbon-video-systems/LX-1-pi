@@ -57,7 +57,7 @@ class ArtnetPacket:
         if op[0]==32 or op[0] == 33:
             # Recieved Artnet Poll
             return None
-        
+
         # unpacks artnet packet frame
         packet = ArtnetPacket()
         (packet.op_code, packet.ver, packet.sequence, packet.physical,
