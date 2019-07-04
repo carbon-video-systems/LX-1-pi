@@ -61,7 +61,6 @@ elif top.TeensyConnection.numTeensy == 2:
 else:
     print("NO TEENSYS CONNECTED - CHECK NUMTEENSYS")
 
-
 class StormBreaker:
     """StormBreaker Protocol"""
     # def __init__(self):
@@ -139,10 +138,11 @@ class StormBreaker:
         time.sleep(0.1)
         check2 = receive_ident(False)
         
-        print("check1 = ")
-        print(check1)
-        print("check2 = ")
-        print(check2)
+        if top.options.testing == True:
+            print("check1 = ")
+            print(check1)
+            print("check2 = ")
+            print(check2)
 
         if check1 == False and check2 == False:
             serBuff = serBody
@@ -150,16 +150,18 @@ class StormBreaker:
             serHead = serBuff
         
         if check1 == None or check2 == None:
-            print("Identity check failed")
+            if top.options.testing == True:
+                print("Identity check failed")
 
     def send(data, body, head):
         """Sends the StormBreaker package to destination microcontrollers"""
         if head == True:
-            print("Sending head frame")
+            if top.options.testing == True:
+                print("Sending head frame")
 
             # change these variables to change packet data
             strobe_shutter = 0
-            iris = 0
+            iris = data[26]
             zoom = 0
             focus = 0
             tilt = (data[24] << 8) | data[25]
@@ -190,25 +192,25 @@ class StormBreaker:
             serHead.write(pack('>B', pan_tilt_speed))
             serHead.write(pack('>B', power_special_functions))
             
-            print("Head Data: ")
-            print(strobe_shutter)
-            print(iris)
-            print(zoom)
-            print(focus)
-            print(tilt)
-            print(tilt_control)
-            print(pan_tilt_speed)
-            print(power_special_functions)
-
-            time.sleep(0.25)
+            if top.options.testing == True:
+                print("Head Data: ")
+                print(strobe_shutter)
+                print(iris)
+                print(zoom)
+                print(focus)
+                print(tilt)
+                print(tilt_control)
+                print(pan_tilt_speed)
+                print(power_special_functions)
             
         if body == True:
-            print("Sending body frame")
+            if top.options.testing == True:
+                print("Sending body frame")
 
             # change these variables to change packet data
             pan = (data[24] << 8) | data[25]    # 0 - 65535
             pan_control = 1                     # 0 - 255
-            pan_tilt_speed = 250                  # 0 - 255
+            pan_tilt_speed = data[26]                  # 0 - 255
             power_special_functions = 0         # 0 - 255
 
             # according to LX1 DMX spec:
@@ -224,13 +226,12 @@ class StormBreaker:
             serBody.write(pack('>B', pan_tilt_speed))
             serBody.write(pack('>B', power_special_functions))
 
-            print("Body Data: ")
-            print(pan)
-            print(pan_control)
-            print(pan_tilt_speed)
-            print(power_special_functions)
-
-            time.sleep(0.25)
+            if top.options.testing == True:
+                print("Body Data: ")
+                print(pan)
+                print(pan_control)
+                print(pan_tilt_speed)
+                print(power_special_functions)
             
 
     def receive(body, head):
@@ -281,13 +282,13 @@ def receive_serials():
         while serBody.in_waiting > 0:
             line = serBody.readline()
             print(line)
-        time.sleep(0.5)
+        time.sleep(0.1)
 
     while serHead.in_waiting > 0:
         while serHead.in_waiting > 0:
             line = serHead.readline()
             print(line)
-        time.sleep(0.5)
+        time.sleep(0.1)
 
 def flush_buffer():
     serBody.reset_input_buffer()
