@@ -44,7 +44,7 @@ class TeensyConnection(IntEnum):
 def main():
     """Main function"""
     # initializes receive array and flushes serial ports
-    time.sleep(0.5)
+    time.sleep(0.1)
 
     old_data = artnet.receive_artnet_packets()
 
@@ -53,9 +53,7 @@ def main():
             old_data = artnet.receive_artnet_packets()
 
     storm.receive_serials()
-    time.sleep(0.5)
     storm.flush_buffer()
-    time.sleep(0.5)
 
     # identify the Teensys that are connected
     if SystemConnection.head == True and SystemConnection.body == True and TeensyConnection.numTeensy == 2:
@@ -78,13 +76,8 @@ def main():
 
         # Checks for incoming serial messages from Teensy
         storm.StormBreaker.receive(SystemConnection.body, SystemConnection.head)
-        # time.sleep(0.05)
 
 
 if __name__== '__main__':
     """Sets main as the top level function"""
     main()
-
-
-# def isNaN(num):
-#     return num != num
