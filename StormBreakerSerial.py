@@ -217,8 +217,8 @@ class StormBreaker:
                 print("Sending body frame")
 
             # change these variables to change packet data
-            pan = (data[24] << 8) | data[25]    # 0 - 65535
-            pan_control = 1                     # 0 - 255
+            pan = (data[19] << 8) | data[20]    # 0 - 65535
+            pan_control = 0                     # 0 - 255
             pan_tilt_speed = data[26]                  # 0 - 255
             power_special_functions = 0         # 0 - 255
 
