@@ -38,7 +38,7 @@ class SystemConnection:
 
 class TeensyConnection(IntEnum):
     """Number of teensy microcontrollers connected to the system"""
-    numTeensy = 1
+    numTeensy = 2
 
 # main function
 def main():
@@ -57,9 +57,7 @@ def main():
 
     # identify the Teensys that are connected
     if SystemConnection.head == True and SystemConnection.body == True and TeensyConnection.numTeensy == 2:
-        time.sleep(5)
-        # TODO CHECK THIS ERROR??
-        # storm.StormBreaker.identify()  #this currently throws an error when commented in
+        storm.StormBreaker.identify()
 
     # main program loop
     while True:

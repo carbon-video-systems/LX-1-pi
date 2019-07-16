@@ -136,6 +136,7 @@ class StormBreaker:
             return retrieve_header()
 
     def identify():
+        global serBody, serHead
         # Send ident to body
         ident_message = StormBreaker.Headers.pack_header(StormBreaker.MsgType.StormIdent)
         serBody.write(ident_message)
