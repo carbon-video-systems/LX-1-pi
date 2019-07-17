@@ -46,18 +46,18 @@ def main():
     # initializes receive array and flushes serial ports
     time.sleep(0.1)
 
-    old_data = artnet.receive_artnet_packets()
-
-    if old_data == None:
-        while old_data == None:
-            old_data = artnet.receive_artnet_packets()
-
     storm.receive_serials()
     storm.flush_buffer()
 
     # identify the Teensys that are connected
     if SystemConnection.head == True and SystemConnection.body == True and TeensyConnection.numTeensy == 2:
         storm.StormBreaker.identify()
+
+    old_data = artnet.receive_artnet_packets()
+
+    if old_data == None:
+        while old_data == None:
+            old_data = artnet.receive_artnet_packets()
 
     # main program loop
     while True:

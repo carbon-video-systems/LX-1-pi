@@ -72,15 +72,6 @@ else:
 
 class StormBreaker:
     """StormBreaker Protocol"""
-    # def __init__(self):
-    #     self.message_type = None
-    #     self.length = None
-    #     self.data = None
-
-    # def __str__(self):
-    #     return ("StormBreaker package:\n - message_type: {0}\n - length: {1}\n - "
-    #             "data: {2}").format(self.message_type, self.length, self.data)
-
     class MsgType(IntEnum):
         """Header enumeration for different messages"""
         StormError = -2
@@ -136,8 +127,9 @@ class StormBreaker:
             return retrieve_header()
 
     def identify():
+        """Identifies connected Teensys as body or head units"""
         global serBody, serHead
-        # Send ident to body
+
         ident_message = StormBreaker.Headers.pack_header(StormBreaker.MsgType.StormIdent)
         serBody.write(ident_message)
         time.sleep(0.1)
