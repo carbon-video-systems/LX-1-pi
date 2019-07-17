@@ -217,8 +217,8 @@ class StormBreaker:
                 print("Sending body frame")
 
             # change these variables to change packet data
-            pan = (data[24] << 8) | data[25]    # 0 - 65535
-            pan_control = 1                     # 0 - 255
+            pan = (data[19] << 8) | data[20]    # 0 - 65535
+            pan_control = 0                     # 0 - 255
             pan_tilt_speed = data[26]                  # 0 - 255
             power_special_functions = 0         # 0 - 255
 
@@ -248,44 +248,42 @@ class StormBreaker:
         if head == True:
             while serHead.in_waiting > 0:
                 while serHead.in_waiting > 0:
-                    line = serHead.readline()
+                    line = serHead.readline().strip()
                     if top.options.testing == True:
                         print(line)
-                    # print(line.decode("utf-8"))
-                time.sleep(0.05)
+                time.sleep(0.01)
 
         if body == True:
             while serBody.in_waiting > 0:
                 while serBody.in_waiting > 0:
-                    line = serBody.readline()
+                    line = serBody.readline().strip
                     if top.options.testing == True:
                         print(line)
-                    # print(line.decode("utf-8"))
-                time.sleep(0.05)
+                time.sleep(0.01)
 
 def receive_ident(body):
     if body == True:
         while serBody.in_waiting == 0:
-            time.sleep(0.1)
-        check = int(serBody.readline().strip())
+            time.sleep(0.01)
+        line = serBody.readline().strip()
         if top.options.testing == True:
-            print(check)
-        if check == StormBreaker.Ident.body:
+            print(line)
+        if line == pack('>B', StormBreaker.Ident.body):
             return True
-        elif check == StormBreaker.Ident.head:
+        elif line == pack('>B', StormBreaker.Ident.head):
             return False
         else:
             return None
 
     else:
         while serHead.in_waiting == 0:
-            time.sleep(0.1)
-        check = int(serBody.readline().strip())
+            time.sleep(0.01)
+        line = serHead.readline().strip()
         if top.options.testing == True:
-            print(check)
-        if check == StormBreaker.Ident.head:
+            print(line)
+        if line == pack('>B', StormBreaker.Ident.head):
             return True
-        elif check == StormBreaker.Ident.body:
+        elif line == pack('>B', StormBreaker.Ident.body):
             return False
         else:
             return None
@@ -296,19 +294,18 @@ def receive_serials():
             line = serBody.readline()
             if top.options.testing == True:
                 print(line)
-        time.sleep(0.1)
+        time.sleep(0.01)
 
     while serHead.in_waiting > 0:
         while serHead.in_waiting > 0:
             line = serHead.readline()
             if top.options.testing == True:
                 print(line)
-        time.sleep(0.1)
+        time.sleep(0.01)
 
 def flush_buffer():
     serBody.reset_input_buffer()
     serHead.reset_input_buffer()
-    time.sleep(0.25)
     serBody.reset_output_buffer()
     serHead.reset_output_buffer()
-    time.sleep(0.25)
+    time.sleep(0.1)
