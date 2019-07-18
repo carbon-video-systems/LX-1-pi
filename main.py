@@ -29,6 +29,7 @@ class options:
     """Sets debugging print statements"""
     testing = True
     debugging = False
+    LX1 = False
 
 # Selects if the head and/or the body are connected
 class SystemConnection:
@@ -46,18 +47,18 @@ def main():
     # initializes receive array and flushes serial ports
     time.sleep(0.1)
 
-    old_data = artnet.receive_artnet_packets()
-
-    if old_data == None:
-        while old_data == None:
-            old_data = artnet.receive_artnet_packets()
-
     storm.receive_serials()
     storm.flush_buffer()
 
     # identify the Teensys that are connected
     if SystemConnection.head == True and SystemConnection.body == True and TeensyConnection.numTeensy == 2:
         storm.StormBreaker.identify()
+
+    # Initializes data with received artnet
+    while True:
+        old_data = artnet.receive_artnet_packets()
+        if old_data != None:
+            break
 
     # main program loop
     while True:
