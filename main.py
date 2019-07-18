@@ -54,12 +54,7 @@ def main():
     if SystemConnection.head == True and SystemConnection.body == True and TeensyConnection.numTeensy == 2:
         storm.StormBreaker.identify()
 
-    # old_data = artnet.receive_artnet_packets()
-
-    # if old_data == None:
-    #     while old_data == None:
-    #         old_data = artnet.receive_artnet_packets()
-
+    # Initializes data with received artnet
     while True:
         old_data = artnet.receive_artnet_packets()
         if old_data != None:
