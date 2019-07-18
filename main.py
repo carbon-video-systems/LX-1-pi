@@ -29,6 +29,7 @@ class options:
     """Sets debugging print statements"""
     testing = True
     debugging = False
+    LX1 = False
 
 # Selects if the head and/or the body are connected
 class SystemConnection:
@@ -53,11 +54,16 @@ def main():
     if SystemConnection.head == True and SystemConnection.body == True and TeensyConnection.numTeensy == 2:
         storm.StormBreaker.identify()
 
-    old_data = artnet.receive_artnet_packets()
+    # old_data = artnet.receive_artnet_packets()
 
-    if old_data == None:
-        while old_data == None:
-            old_data = artnet.receive_artnet_packets()
+    # if old_data == None:
+    #     while old_data == None:
+    #         old_data = artnet.receive_artnet_packets()
+
+    while True:
+        old_data = artnet.receive_artnet_packets()
+        if old_data != None:
+            break
 
     # main program loop
     while True:
