@@ -16,4 +16,5 @@ USB-FTDI based UART connection to Teensy 3.6 microcontrollers.
 7/17/19:  Fixed head and body system identification.
 
 # TODO
-Speed testing.
+Speed testing. \
+System response to ArtNet poll?
