@@ -29,17 +29,17 @@ class options:
     """Sets debugging print statements"""
     testing = True
     debugging = False
-    LX1 = False
+    LX1 = True
 
 # Selects if the head and/or the body are connected
 class SystemConnection:
     """Declares which modules are connected"""
-    head = True
+    head = False
     body = True
 
 class TeensyConnection(IntEnum):
     """Number of teensy microcontrollers connected to the system"""
-    numTeensy = 2
+    numTeensy = 1
 
 # main function
 def main():
