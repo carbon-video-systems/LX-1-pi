@@ -13,8 +13,10 @@ USB-FTDI based UART connection to Teensy 3.6 microcontrollers.
 6/27/19:  Added the LX1 data structure to StormBreaker. \
 7/04/19:  Removed delays, added classes for debugging options. \
 7/15/19:  Added support for receiving data from Teensy. \
-7/17/19:  Fixed head and body system identification.
+7/17/19:  Fixed head and body system identification. \
+9/27/19:  Added index offset capability.
 
 # TODO
-Initialize data to 0. \
-ArtNet poll callback.
+ArtNet poll callback. \
+Test index offset. \
+Ethernet-based communication with computer.
