@@ -162,14 +162,14 @@ class StormBreaker:
                 print("Sending head frame")
 
             if top.options.LX1 == True: # according to LX1 DMX spec:
-                strobe_shutter = data[0]
-                iris = data[20]
-                zoom = (data[21] << 8) | data[22]
-                focus = (data[23] << 8) | data[24]
-                tilt = (data[27] << 8) | data[28]
-                tilt_control = data[30]
-                pan_tilt_speed = data[31]
-                power_special_functions = data[32]
+                strobe_shutter = data[0 + top.DMXindex.index]
+                iris = data[20 + top.DMXindex.index]
+                zoom = (data[21 + top.DMXindex.index] << 8) | data[22 + top.DMXindex.index]
+                focus = (data[23 + top.DMXindex.index] << 8) | data[24 + top.DMXindex.index]
+                tilt = (data[27 + top.DMXindex.index] << 8) | data[28 + top.DMXindex.index]
+                tilt_control = data[30 + top.DMXindex.index]
+                pan_tilt_speed = data[31 + top.DMXindex.index]
+                power_special_functions = data[32 + top.DMXindex.index]
             else:
                 # change these variables to change packet data for system testing
                 strobe_shutter = data[23]
@@ -210,16 +210,16 @@ class StormBreaker:
                 print("Sending body frame")
 
             if top.options.LX1 == True: # According to LX1 DMX specs
-                pan = (data[25] << 8) | data[26]
-                pan_control = data[29]
-                pan_tilt_speed = data[31]
-                power_special_functions = data[32]
+                pan = (data[25 + top.DMXindex.index] << 8) | data[26 + top.DMXindex.index]
+                pan_control = data[29 + top.DMXindex.index]
+                pan_tilt_speed = data[31 + top.DMXindex.index]
+                power_special_functions = data[32 + top.DMXindex.index]
             else:
                 # change these variables to change packet data for system testing
-                pan = (data[3] << 8) | data[4]    # 0 - 65535
-                pan_control = 1                     # 0 - 255
-                pan_tilt_speed = 200                 # 0 - 255
-                power_special_functions = 0         # 0 - 255
+                pan = (data[3] << 8) | data[4]  # 0 - 65535
+                pan_control = 1                 # 0 - 255
+                pan_tilt_speed = 200            # 0 - 255
+                power_special_functions = 0     # 0 - 255
 
             serBody.write(StormBreaker.Headers.pack_header(StormBreaker.MsgType.StormBody))
             serBody.write(pack('>B', pan >> 8))

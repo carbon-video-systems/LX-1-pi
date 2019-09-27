@@ -24,6 +24,7 @@ UDP_PORT = 6454
 class ArtnetPacket:
     """ArtNet Packet Class"""
     ARTNET_HEADER = b'Art-Net\x00'
+    INDEX_HEADER = b'Index\x00'
 
     def __init__(self):
         """ArtNet Structure"""

@@ -24,13 +24,6 @@ from enum import Enum, IntEnum
 import StormBreakerSerial as storm
 import ArtNet as artnet
 
-# Selects if debugging print statements are output
-class options:
-    """Sets debugging print statements"""
-    testing = True
-    debugging = False
-    LX1 = True
-
 # Selects if the head and/or the body are connected
 class SystemConnection:
     """Declares which modules are connected"""
@@ -40,6 +33,18 @@ class SystemConnection:
 class TeensyConnection(IntEnum):
     """Number of teensy microcontrollers connected to the system"""
     numTeensy = 1
+
+# Selects if debugging print statements are output
+class options:
+    """Sets debugging print statements"""
+    testing = True
+    debugging = False
+    LX1 = True
+
+# Sets the starting DMX index for the fixture
+class DMXindex:
+    """Sets the starting DMX index for LX1"""
+    index = 0
 
 # main function
 def main():
@@ -68,6 +73,9 @@ def main():
         # Updates StormBreaker protocol with new data
         if data == None:
             data = old_data
+        # elif data[0] == :
+            # Updates fixture DMX index
+        #     DMXindex.index = data[1]
         else:
             old_data = data
             # function sends data to the stormbreaker structure
