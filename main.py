@@ -73,9 +73,10 @@ def main():
         # Updates StormBreaker protocol with new data
         if data == None:
             data = old_data
-        # elif data[0] == :
-            # Updates fixture DMX index
-        #     DMXindex.index = data[1]
+        # Updates LX1 DMX index
+        # elif data[0] == artnet.ArtnetPacket.INDEX_HEADER:
+        #     # Updates fixture DMX index
+        #     DMXindex.index = data[8]
         else:
             old_data = data
             # function sends data to the stormbreaker structure

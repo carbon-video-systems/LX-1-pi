@@ -15,6 +15,7 @@ and the following functions outside of classes:
 import sys
 from socket import (socket, AF_INET, SOCK_DGRAM, SOL_SOCKET, SO_REUSEADDR)
 from struct import pack, unpack
+import main as top
 
 # Sets IP address and UDP_PORT for the incoming data
 UDP_IP = ""
@@ -24,7 +25,8 @@ UDP_PORT = 6454
 class ArtnetPacket:
     """ArtNet Packet Class"""
     ARTNET_HEADER = b'Art-Net\x00'
-    INDEX_HEADER = b'Index\x00'
+    INDEX_HEADER = b'Art-Ind\x00'
+    INDEX_LENGTH = 9
 
     def __init__(self):
         """ArtNet Structure"""
@@ -48,28 +50,45 @@ class ArtnetPacket:
     def unpack_raw_artnet_packet(raw_data):
         """Unpacks received ArtNet packets"""
 
-        if unpack('!8s', raw_data[:8])[0] != ArtnetPacket.ARTNET_HEADER:
-            print("Received a non Art-Net packet")
-            return None
+        header_check = unpack('!8s', raw_data[:8])[0]
 
-        # unpacks data code
-        op=unpack('!B',raw_data[9:10])
+        if header_check != ArtnetPacket.ARTNET_HEADER:
+            if header_check == ArtnetPacket.INDEX_HEADER:
+                index_packet = unpack('{0}s'.format(int(ArtnetPacket.INDEX_LENGTH)), raw_data[0:0+int(ArtnetPacket.INDEX_LENGTH)])[0]
+                if top.options.testing == True:
+                    print("Received an Index packet")
+                return index_packet
+            else:
+                if top.options.testing == True:
+                    print("Received a non Art-Net packet")
+                return None
 
-        if op[0]==32 or op[0] == 33:
-            # Recieved Artnet Poll
-            return None
+        # if unpack('!8s', raw_data[:8])[0] != ArtnetPacket.ARTNET_HEADER:
+        #     print("Received a non Art-Net packet")
+        #     return None
+
+        # # unpacks data code
+        # op = unpack('!B',raw_data[9:10])
+
+        # if op[0]==32 or op[0] == 33:
+        #     # Received Artnet Poll
+        #     return None
 
         # unpacks artnet packet frame
         packet = ArtnetPacket()
         (packet.op_code, packet.ver, packet.sequence, packet.physical,
             packet.universe, packet.length) = unpack('!HHBBHH', raw_data[8:18])
 
+        if packet.op_code == 32 or packet.op_code == 33:
+            # Received Artnet Poll
+            return None
+
         # unpacks artnet data payload
         packet.data = unpack(
             '{0}s'.format(int(packet.length)),
             raw_data[18:18+int(packet.length)])[0]
 
-        return packet
+        return packet.data
 
 # main artnet receive function
 def receive_artnet_packets():
@@ -79,7 +98,9 @@ def receive_artnet_packets():
 
     data, addr = sock.recvfrom(1024)
     packet = ArtnetPacket.unpack_raw_artnet_packet(data)
-    if packet == None:
-        return None
-    else:
-        return packet.data
+
+    # if packet == None:
+    #     return None
+    # else:
+    #     return packet
+    return packet
