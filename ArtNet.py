@@ -67,21 +67,17 @@ class ArtnetPacket:
         #     print("Received a non Art-Net packet")
         #     return None
 
-        # # unpacks data code
-        # op = unpack('!B',raw_data[9:10])
+        # unpacks data code
+        op = unpack('!B',raw_data[9:10])
 
-        # if op[0]==32 or op[0] == 33:
-        #     # Received Artnet Poll
-        #     return None
+        if op[0]==32 or op[0] == 33:
+            # Received Artnet Poll
+            return None
 
         # unpacks artnet packet frame
         packet = ArtnetPacket()
         (packet.op_code, packet.ver, packet.sequence, packet.physical,
             packet.universe, packet.length) = unpack('!HHBBHH', raw_data[8:18])
-
-        if packet.op_code == 32 or packet.op_code == 33:
-            # Received Artnet Poll
-            return None
 
         # unpacks artnet data payload
         packet.data = unpack(
