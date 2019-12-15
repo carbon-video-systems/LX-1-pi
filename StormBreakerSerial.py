@@ -85,7 +85,7 @@ class StormBreaker:
         """Length of the StormBreaker payload"""
         ident = 0
         body = 5
-        head = 11
+        head = 14
 
     class Ident(IntEnum):
         """System identification message"""
@@ -170,6 +170,9 @@ class StormBreaker:
                 tilt_control = data[30]
                 pan_tilt_speed = data[31]
                 power_special_functions = data[32]
+                led_ring_red = data[33]
+                led_ring_green = data[34]
+                led_ring_blue = data[35]
             else:
                 # change these variables to change packet data for system testing
                 strobe_shutter = data[23]
@@ -180,6 +183,9 @@ class StormBreaker:
                 tilt_control = 0
                 pan_tilt_speed = 200
                 power_special_functions = 0
+                led_ring_red = 128
+                led_ring_green = 128
+                led_ring_blue = 128
 
             serHead.write(StormBreaker.Headers.pack_header(StormBreaker.MsgType.StormHead))
             serHead.write(pack('>B', strobe_shutter))
@@ -193,6 +199,9 @@ class StormBreaker:
             serHead.write(pack('>B', tilt_control))
             serHead.write(pack('>B', pan_tilt_speed))
             serHead.write(pack('>B', power_special_functions))
+            serHead.write(pack('>B', led_ring_red))
+            serHead.write(pack('>B', led_ring_green))
+            serHead.write(pack('>B', led_ring_blue))
 
             if top.options.debugging == True:
                 print("Head Data: ")
@@ -204,6 +213,9 @@ class StormBreaker:
                 print(tilt_control)
                 print(pan_tilt_speed)
                 print(power_special_functions)
+                print(led_ring_red)
+                print(led_ring_green)
+                print(led_ring_blue)
 
         if body == True:
             if top.options.debugging == True:
